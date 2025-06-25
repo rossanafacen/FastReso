@@ -1,13 +1,3 @@
-/*
- * Copyright (c) 2018-2021 Aleksas Mazeliauskas, Stefan Floerchinger, 
- *                    Eduardo Grossi, and Derek Teaney
- * All rights reserved.
- *
- * FastReso is distributed under MIT license;
- * see the LICENSE file that should be present in the root
- * of the source distribution, or alternately available at:
- * https://github.com/amazeliauskas/FastReso/
- */
 #ifndef FASTFO_TKernel_h
 #define FASTFO_TKernel_h
 
@@ -28,8 +18,8 @@ class TKernel {
   public:
     TKernel(TParticle *particle);
     ~TKernel() ;
-    double get_K_mu_detadphi_i(double eta, double phi,double pT, double ur,  int index) ;
-    double get_K_mu_qag(double pT, double ur, int index);
+    double get_K_mu_detadphi_i(double eta, double phi,double pT, double ur,  int index, int m) ;
+    double get_K_mu_qag(double pT, double ur, int index, int m=0);
     void print(std::string tag, std::string columns );
 };
 

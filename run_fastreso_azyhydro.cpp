@@ -13,12 +13,16 @@
 #include <string>
 #include <TFastReso_AZYHYDRO.h>
 #include <gsl/gsl_errno.h>
+#include <nlohmann/json.hpp>
+#include <fstream>
+
 using namespace std ;
+using json = nlohmann::json;
 int main(int argc, const char * argv[])
 {
-    if (argc<3) {
+    if (argc<5) {
         cerr << argv[0] << " not enough input arguments " << endl;
-        cerr << argv[0] << " decays_PDG2016_massordered.dat ./outputfolder/" << endl;
+        cerr << argv[0] << " decays_PDG2016_massordered.dat ./outputfolder/ /json_file/ job_id" << endl;
         exit(EXIT_FAILURE) ;
     }
 /////////////////// DANGER ///////////////////////////////////////////////////
@@ -34,57 +38,62 @@ int main(int argc, const char * argv[])
     string pdata(argv[1]);// = "decays_PDG2016_massordered.dat";
     string ddata(argv[1]);// = "decays_PDG2016_massordered.dat";
     string tag(argv[2]);
+    string config(argv[3]); 
+    int jobposition = std::stoi(argv[4]);
     bool verbose = true ; // print what is being done
-    const int ns=6;
-    // which particles to print out
-    const int pdg[ns]={
-        211,
-        321,
-        2212,
-        3122,
-        3312,
-        3334
-    };
+    
+    ifstream file(config);
+    json j;
+    file >> j;
 
-    // freeze-out temperature
-//    const int NT = 6; // number of temperatures
-//    double Tmin=0.120; // min temp
-//    double Tmax=0.170; // max temp
-//    double dT=(Tmax-Tmin)/(NT-1); // temp step
-//#pragma omp parallel for
-//    for (int i =0; i <NT; i++){
+    int ns = j["physics"]["n_particles"];
+    int pdg[ns];
+    for(int i = 0; i < ns; i++) {
+        pdg[i] = j["physics"]["particles"][i];
+    } 
+    double Tkin = j["physics"]["Tkin"][jobposition];
+    bool dothermal = j["physics"]["thermal"];
+    bool dodiff = j["physics"]["diffusion"];
+    int NT = 2;
+    #pragma omp parallel for //to delete
+    for (int j=0; j<NT; j++)
     {
-//        double Tfo=Tmin+dT*i; //GeV
-        double Tfo=0.145; //GeV freeze-out temperature
+        double Tfo=Tkin; //GeV freeze-out temperature
         char buffer [50];
-        sprintf (buffer, "%.4f", Tfo);
+        sprintf (buffer, "%.3f", Tfo);
         string Ttag(buffer);
-        string inarg= "Feq Fshear Fbulk Ftemp Fvel"; // which components to print out
-        
+        string inarg;
+        if (dodiff) {
+          inarg= "Feq Fshear Fbulk Ftemp Fvel Fdiff"; // which components to print out
+        } else {
+          inarg= "Feq Fshear Fbulk Ftemp Fvel"; 
+        }
+
         // create the TFastReso class
         TFastReso_AZYHYDRO fastreso;
         // read all particles
         fastreso.read_particles_data(pdata,inarg, verbose);
+        if(dothermal) {
+            // initialize components with thermal distributions at freeze-out temperature
+            cout << " Do thermal T = " <<Tfo  <<" GeV" <<endl;
+            fastreso.do_thermal(Tfo);
 
-        // initialize components with thermal distributions at freeze-out temperature
-        cout << " Do thermal T = " <<Tfo  <<" GeV" <<endl;
-        fastreso.do_thermal(Tfo);
-
-        // print out particles
-        for (int k =0; k<ns; k++){ 
-        sprintf (buffer, "PDGid_%d", pdg[k]);
-        string name(buffer);
-          fastreso.getParticleByPDG(pdg[k])->print(tag+name+"_thermal_T"+Ttag); }
-
+            // print out particles
+            for (int k =0; k<ns; k++){ 
+            sprintf (buffer, "%d_PDGid_%d", j, pdg[k]);
+            string name(buffer);
+            fastreso.getParticleByPDG(pdg[k])->print(tag+name+"_thermal_Tkin_"+Ttag); }
+        }
 
         // perform decays
-        cout << " Do decays T = " <<Tfo  <<" GeV" <<endl;
+        cout << " Do decays T = " << Tfo  <<" GeV" <<endl;
         fastreso.do_decays(ddata, verbose);
 
         // print out components
         for (int k =0; k<ns; k++){ 
-        sprintf (buffer, "PDGid_%d", pdg[k]);
+        sprintf (buffer, "%d_PDGid_%d", j, pdg[k]);
         string name(buffer);
-          fastreso.getParticleByPDG(pdg[k])->print(tag+name+"_total_T"+Ttag); }
+          fastreso.getParticleByPDG(pdg[k])->print(tag+name+"_total_Tkin_"+Ttag); }
+        
     }
 }

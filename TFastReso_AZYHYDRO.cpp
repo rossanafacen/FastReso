@@ -158,16 +158,6 @@ if (verbose) {
 }
       fIndexTable[PDGCode] = (int) fParticleData.size();
       fParticleData.push_back(move(unique_ptr<TParticle_AZYHYDRO>(new TParticle_AZYHYDRO(PDGCode, Name, Mass,Gamma, Nu, Qb, Qs, Qc, Qbot, Isospin, Charge, Ndecays, comps))));
-      // add anti-baryions
-//      if (Qb>0){
-//        fIndexTable[-PDGCode] = fParticleData.size();
-//        fParticleData.push_back(move(unique_ptr<TParticle_AZYHYDRO>(new TParticle_AZYHYDRO(-PDGCode, Name+"bar", Mass,Gamma, Nu, -Qb, -Qs, -Qc, -Qbot, Isospin, -Charge, Ndecays))));
-//
-//if (verbose) {
-//        printf("%9d\t%17s\t%9.5f\t%9.5f\t%d\t%g\t%3.g\t%g\t%g\t%g\t%3.g\t%3d\n",
-//            -PDGCode, (Name+"bar").c_str(), Mass, Gamma, Nu, -Qb,-Qs, -Qc, -Qbot, Isospin, -Charge, Ndecays);
-//}
-//      }
     }
   }
 if (verbose) {
@@ -221,12 +211,12 @@ if (verbose) {printf("%9d\t%9d\t%9d\t%f\n", Parent, Child1, Child2, BranchingRat
       if (verbose) { printf("%9d\t%9d\t%9d\t%9d\t%f\n", Parent, Child1, Child2, Child3, BranchingRatio);}
       }
       else if (ndecayproducts==4) {
-        cerr  << "\033[1mTFastReso_AZYHYDRO.cpp::do_decays\033[0m : \033[1;31merror\033[0m : skipping 4 particle decay! " << endl;
+        //cerr  << "\033[1mTFastReso_AZYHYDRO.cpp::do_decays\033[0m : \033[1;31merror\033[0m : skipping 4 particle decay! " << endl;
         printf("%9d\t%9d\t%9d\t%9d\t%9d\t%f\n", Parent, Child1, Child2, Child3, Child4, BranchingRatio);
         continue;
       }
       else { 
-        cerr << "\033[1mTFastReso_AZYHYDRO.cpp::do_decays\033[0m : \033[1;31merror\033[0m : unrecognined number of decays! " << ndecayproducts << endl;
+        cerr << "\033[1mTFastReso_AZYHYDRO.cpp::do_decays\033[0m : \033[1;31merror\033[0m : unrecognized number of decays! " << ndecayproducts << endl;
         cout << line << endl;
         exit(EXIT_FAILURE);}
       count_decays++;
@@ -243,11 +233,6 @@ if (verbose) {printf("%9d\t%9d\t%9d\t%f\n", Parent, Child1, Child2, BranchingRat
           cerr  << "\033[1mTFastReso_AZYHYDRO.cpp::do_decays\033[0m : \033[1;31merror\033[0m : father particle lighter than childern! " << Ma << " < " << Mb+Mc << endl;
           continue;
         }
-        //// Skip decays whose parents have decay width less than 10KeV 
-        //if (GammaA <  10e-6) {
-        //  cerr  << "\033[1mTFastReso_AZYHYDRO.cpp::do_decays\033[0m : \033[1;31merror\033[0m : father particle width smaller than 10 KeV ! Gamma = " << GammaA << " GeV" << endl;
-        //  continue;
-        //}
 
         double QS = getParticleByPDG(Parent)->getQS();
         double QS1 = getParticleByPDG(Child1)->getQS();
@@ -259,16 +244,6 @@ if (verbose) {printf("%9d\t%9d\t%9d\t%f\n", Parent, Child1, Child2, BranchingRat
         }
         do_2bodydecay(getParticleByPDG(Parent), getParticleByPDG(Child1), getParticleByPDG(Child2), BranchingRatio);
         if (Child1!=Child2){ do_2bodydecay(getParticleByPDG(Parent),getParticleByPDG( Child2),getParticleByPDG( Child1), BranchingRatio); }
-
-        // decay anti-baryions
-//        if (QBa>0){
-//          count_2decays++;
-//      count_decays++;
-// if (verbose){         printf("%9d\t%9d\t%9d\t%f\n", -Parent, -Child1, -Child2, BranchingRatio);}
-//          do_2bodydecay(getParticleByPDG(-Parent), getParticleByPDG(-Child1), getParticleByPDG(-Child2), BranchingRatio);
-//          if (Child1!=Child2){ do_2bodydecay(getParticleByPDG(-Parent), getParticleByPDG(-Child2), getParticleByPDG(-Child1), BranchingRatio); }
-//        }
-//
 
 
 
@@ -298,18 +273,6 @@ if (verbose) {printf("%9d\t%9d\t%9d\t%f\n", Parent, Child1, Child2, BranchingRat
         do_3bodydecay(getParticleByPDG(Parent), getParticleByPDG(Child1), getParticleByPDG(Child2),getParticleByPDG(Child3), BranchingRatio);
         if (Child1!=Child2){ do_3bodydecay(getParticleByPDG(Parent), getParticleByPDG(Child2), getParticleByPDG(Child1),getParticleByPDG(Child3), BranchingRatio); }
         if (Child1!=Child3 and Child2!=Child3){ do_3bodydecay(getParticleByPDG(Parent), getParticleByPDG(Child3),getParticleByPDG( Child1),getParticleByPDG(Child2), BranchingRatio); }
-
-        // if (Child1=="pi0139plu" or Child2=="pi0139plu" or Child3=="pi0139plu") {getParticleByPDG("pi0139plu")->print("pion_"+to_string(fIndexTable[Parent]) +"_"+to_string(fIndexTable[Child1])+"_"+to_string(fIndexTable[Child2])+"_"+to_string(fIndexTable[Child3])); }
-        // decay anti-baryions
-//        if (QBa>0){
-//          count_3decays++;
-//      count_decays++;
-// if (verbose){         printf("%9d\t%9d\t%9d\t%9d\t%f\n", -Parent, -Child1, -Child2,-Child3, BranchingRatio);}
-//
-//          do_3bodydecay(getParticleByPDG(-Parent), getParticleByPDG(-Child1), getParticleByPDG(-Child2),getParticleByPDG(-Child3), BranchingRatio);
-//          if (Child1!=Child2){ do_3bodydecay(getParticleByPDG(-Parent),getParticleByPDG( -Child2),getParticleByPDG( -Child1),getParticleByPDG(-Child3), BranchingRatio); }
-//          if (Child1!=Child3 and Child2!=Child3){ do_3bodydecay(getParticleByPDG(-Parent), getParticleByPDG(-Child3), getParticleByPDG(-Child1),getParticleByPDG(-Child2), BranchingRatio); }
-//        }
       }
 
 
@@ -318,7 +281,7 @@ if (verbose) {printf("%9d\t%9d\t%9d\t%f\n", Parent, Child1, Child2, BranchingRat
 
 
 //if (verbose) {
-  clog << "Tota number of decays read " << count_decays << endl;
+  clog << "Total number of decays read " << count_decays << endl;
   clog << "Number of 2-body decays read " << count_2decays << endl;
   clog << "Number of 3-body decays read " << count_3decays << endl;
 //}

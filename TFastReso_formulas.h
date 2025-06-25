@@ -123,7 +123,7 @@ double get_factor_Aj(EFjIndex j, double Qw, double Ew, double Ebar, double pbar,
       break;
     case EFjIndex::kFvel3: // fvelocity 3
       return pbar/pw*Qw/pw*Ew/Ebar;
-      break;
+      break;  
     default:
       std::cerr  << "\033[1mTFastReso.cpp::get_factor_Aj\033[0m : \033[1;31merror\033[0m :  wrong index "  << (int) j << std::endl;
       exit(EXIT_FAILURE);
@@ -171,12 +171,10 @@ double get_F_pu_dw(double w, void * p) {
   //double pbar = GSL_MAX(get_p(Ebar, Mb),DBL_EPSILON);  
   double pbar = get_p(Ebar, Mb);// ,DBL_EPSILON);  
   double Ebar_old = Ebar*Eabc*Ma/Mb/Mb-w*pbar*pabc*Ma/Mb/Mb;
-  //double Ebar_old = pbar*pabc*Ma/Mb/Mb*(1-w);
-  //double Ebar_old = pbar*pabc/Ma*u;
+
   double F_old=Parent->get_Fj( (int) index, Ebar_old);
   double Qw= (Ma*Eabc*pbar/Mb/Mb-w*Ma*pabc/Mb/Mb*Ebar);
-  //double Qw = pabc/Ma*u;
-//  double Ew= (Ma*Eabc*Ebar/Mb/Mb-w*Ma*pabc*pbar/Mb/Mb);
+
   double A = get_factor_Aj(index, Qw, Ebar_old, Ebar, pbar, Ma,sqrt(Qw*Qw+(1-w*w)*Ma*Ma/Mb/Mb*pabc*pabc));
   return F_old*A;
 }

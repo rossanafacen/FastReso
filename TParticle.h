@@ -35,7 +35,10 @@ enum class EFjIndex : int {
   kFtemp2  = 8,
   kFvel1  = 9,
   kFvel2  = 10,
-  kFvel3  = 11 };
+  kFvel3  = 11,
+  kFdiff1  = 12,
+  kFdiff2  = 13,
+  kFdiff3  = 14};
 
 
 

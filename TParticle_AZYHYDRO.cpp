@@ -117,13 +117,12 @@ if( fscanf(pFile, "# %d  %s %lf %le %d %lg %lg %lg %lg %lg %lg %d %lf\n",
   fscanf(pFile,"#%*s [GeV]\t%*s [GeV]\t%*s 1\t%*s 2\t%*s 1\t%*s 2\t%*s 3\t%*s 1\t%*s 2\t%*s 1\t%*s 2\t%*s 1\t%*s 2\t%*s 3\n");
   for(int i = 0; i <grid_params::fNpbar; i++){
     if(fscanf(pFile,"%le\t%le", &fPbar_arr[i], &fMass)!=2){
-
     cerr << "\033[1mTParticle_AZYHYDRO.cpp\033[0m : \033[1;31merror\033[0m : fscan error"  << endl;
     exit(EXIT_FAILURE);
       }
     for(int j = 0; j <grid_params::fNf; j++){
      if(fscanf(pFile,"\t%le", &fFj_arr[j][i])!=1){
-       
+       cout << "error 2" << endl;
     cerr << "\033[1mTParticle_AZYHYDRO.cpp\033[0m : \033[1;31merror\033[0m : fscan error"  << endl;
     exit(EXIT_FAILURE);
        
