@@ -1,2 +1,0 @@
-/usr/bin/ar qc libfastreso.a CMakeFiles/fastreso.dir/TParticle.cpp.o CMakeFiles/fastreso.dir/TFastReso_THERMINATOR.cpp.o CMakeFiles/fastreso.dir/TFastReso_AZYHYDRO.cpp.o CMakeFiles/fastreso.dir/TParticle_THERMINATOR.cpp.o CMakeFiles/fastreso.dir/TParticle_AZYHYDRO.cpp.o CMakeFiles/fastreso.dir/TKernel.cpp.o
-/usr/bin/ranlib libfastreso.a

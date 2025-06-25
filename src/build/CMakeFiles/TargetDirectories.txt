@@ -1,8 +1,0 @@
-/lustre/alice/users/rfacen/FastReso/src/build/CMakeFiles/fastreso.dir
-/lustre/alice/users/rfacen/FastReso/src/build/CMakeFiles/run_fastreso_therminator.exe.dir
-/lustre/alice/users/rfacen/FastReso/src/build/CMakeFiles/run_fastreso_azyhydro.exe.dir
-/lustre/alice/users/rfacen/FastReso/src/build/CMakeFiles/run_kernels.exe.dir
-/lustre/alice/users/rfacen/FastReso/src/build/CMakeFiles/run_eos.exe.dir
-/lustre/alice/users/rfacen/FastReso/src/build/CMakeFiles/run_PCE.exe.dir
-/lustre/alice/users/rfacen/FastReso/src/build/CMakeFiles/edit_cache.dir
-/lustre/alice/users/rfacen/FastReso/src/build/CMakeFiles/rebuild_cache.dir
