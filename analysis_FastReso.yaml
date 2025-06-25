@@ -1,0 +1,44 @@
+out_directory: /lustre/alice/users/username/FastReso/pce_2_try
+
+
+run_Fj: /lustre/alice/users/username/FastReso/src/build/run_fastreso_azyhydro.exe   
+run_pce: /lustre/alice/users/username/FastReso/src/build/run_PCE.exe   
+run_Kj: /lustre/alice/users/username/FastReso/src/build/run_kernels.exe 
+
+decay_list: /lustre/alice/users/username/FastReso/src/resonance_lists/decays_QM2016Plus_massorder.dat
+reversed_decay_list: /lustre/alice/users/username/FastReso/src/resonance_lists/reverse_decays_QM2016Plus_massorder.dat
+
+
+slurm:
+  name: FastReso
+  max_time: 240
+  partition: main
+  work_directory: ./
+  cpus_per_job: 2 
+  n_tasks: 1 #number of tasks  
+  memory: 64G
+
+physics:
+  do_pce: true
+  thermal: false
+  diffusion: false              
+  particles: [211, 321]
+  n_particles: 2 #must be the same as the length of particles 
+  Tkin: [0.110, 0.130]
+  Tchem: [0.110, 0.130]
+  dT: 0.01 # temperature step
+  min_pt: 0.05             
+  max_pt: 3.5   
+  npt: 40           
+  min_ur: 0.0              
+  max_ur: 6.0
+  nur: 40
+
+  pce:
+    metastable_particles: [3334, -3334, 3324, -3324, 3314, -3314, 3124, -3124, 3312, -3312, 3322, -3322, 3112,  -3112, 3212, -3212, 3222, -3222, 3122, -3122, 333, 331, 2112, -2112, 2212, -2212, 223, 221, 311, -311, 321, -321, 211, -211, 111]
+    n_metastable: 35 #must be the same as the length of metastable particles 
+    
+  
+
+    
+   
