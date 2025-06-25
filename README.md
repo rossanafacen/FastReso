@@ -2,8 +2,8 @@
 
 FastReso calculates the irreducible spectral components for resonance decays for the given list of particles and decay chains.
 
-Copyright (c) 2018-2021 Aleksas Mazeliauskas, Stefan Floerchinger, Eduardo Grossi, and Derek Teaney
-All rights reserved.
+Copyright (c) 2018-2021 Aleksas Mazeliauskas, Stefan Floerchinger, Eduardo Grossi, and Derek Teaney. \\
+All rights reserved.\\
 FastReso is distributed under MIT license; see the LICENSE file available at: https://github.com/amazeliauskas/FastReso/
 
 Steps for running on virgo3:
