@@ -55,9 +55,9 @@ int main(int argc, const char * argv[])
     bool dothermal = j["physics"]["thermal"];
     bool dodiff = j["physics"]["diffusion"];
     int NT = 2;
-    #pragma omp parallel for //to delete
-    for (int j=0; j<NT; j++)
-    {
+    // #pragma omp parallel for //to delete
+    // for (int j=0; j<NT; j++)
+    // {
         double Tfo=Tkin; //GeV freeze-out temperature
         char buffer [50];
         sprintf (buffer, "%.3f", Tfo);
@@ -80,7 +80,7 @@ int main(int argc, const char * argv[])
 
             // print out particles
             for (int k =0; k<ns; k++){ 
-            sprintf (buffer, "%d_PDGid_%d", j, pdg[k]);
+            sprintf (buffer, "PDGid_%d", pdg[k]);
             string name(buffer);
             fastreso.getParticleByPDG(pdg[k])->print(tag+name+"_thermal_Tkin_"+Ttag); }
         }
@@ -91,9 +91,9 @@ int main(int argc, const char * argv[])
 
         // print out components
         for (int k =0; k<ns; k++){ 
-        sprintf (buffer, "%d_PDGid_%d", j, pdg[k]);
+        sprintf (buffer, "PDGid_%d", pdg[k]);
         string name(buffer);
           fastreso.getParticleByPDG(pdg[k])->print(tag+name+"_total_Tkin_"+Ttag); }
         
-    }
+   //  }
 }

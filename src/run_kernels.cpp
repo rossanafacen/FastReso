@@ -42,15 +42,10 @@ int main(int argc, const char * argv[])
        pdg[i] = j["physics"]["particles"][i];
   } 
  
-  const double Tmin = j["physics"]["Tkin"][0];
-  const double Tmax = j["physics"]["Tkin"][1];
-  double dT = j["physics"]["dT"];
-  int NT = (int) ((Tmax - Tmin) / dT) + 1;
-  double Tchem = j["physics"]["Tchem"][jobposition];
+  double Tkin = j["physics"]["Tkin"][jobposition];
   
   bool dothermal = j["physics"]["thermal"];
   bool diff_flag = j["physics"]["diffusion"];
-  bool dopce = j["physics"]["do_pce"];
    
   /////////////////// DANGER ///////////////////////////////////////////////////
   // If integration fails, you can turn the handler off. Integration functions
@@ -60,58 +55,47 @@ int main(int argc, const char * argv[])
   /////////////////// DANGER ///////////////////////////////////////////////////
 
    
-  #pragma omp parallel for
-  for (int i =0; i < NT; i++)
-  {
 
-    double Tfo = Tmin+dT*i; //GeV
-    char buffer [50];
-    sprintf (buffer, "%.3f", Tfo);
-    string Ttag(buffer);    
-    char bufferChem [50];
-    sprintf (bufferChem, "%.3f", Tchem);
-    string Tchemtag(bufferChem); 
-    cout << " Do kernels = " << Ttag  <<" GeV" <<endl;
-    if (dothermal){
-      for (int k =0; k<ns; k++){
-        string tag;  
-        sprintf (buffer, "PDGid_%d", pdg[k]);
-          string name(buffer);
-          if(dopce){
-            cout << " Do particle  " <<tag1+name+"_thermal_Tchem_"+Tchemtag+"_Tkin_"+Ttag  <<endl;
-            tag = tag1+name+"_thermal_Tchem_"+Tchemtag+"_Tkin_"+Ttag; } 
-          else {   
-            cout << " Do particle  " <<tag1+name+"_thermal_Tkin_"+Ttag  <<endl;
-             tag = tag1+name+"_thermal_Tkin_"+Ttag ; }
-      
-          TParticle_AZYHYDRO particle(tag);    
-          TKernel kernel(&particle);
-          if (diff_flag) {
-            kernel.print(tag2+name+"_thermal_Tkin_"+Ttag,"Keq Kshear Kbulk Kdiff");
-          } else {
-            kernel.print(tag2+name+"_thermal_Tkin_"+Ttag,"Keq Kshear Kbulk Ktemp Kvel");
-          }
-        }
-    }
+  double Tfo = Tkin; //GeV
+  char buffer [50];
+  sprintf (buffer, "%.3f", Tfo);
+  string Ttag(buffer);    
+  cout << " Do kernels = " << Ttag  <<" GeV" <<endl;
+  
+  if (dothermal){
     for (int k =0; k<ns; k++){
+      string tag;  
       sprintf (buffer, "PDGid_%d", pdg[k]);
       string name(buffer);
-      string tag;
-      if(dopce){
-        cout << " Do particle  " <<tag1+name+"_total_Tchem_"+Tchemtag+"_Tkin_"+Ttag  <<endl;
-          tag = tag1+name+"_total_Tchem_"+Tchemtag+"_Tkin_"+Ttag; } 
-      else {   
-        cout << " Do particle  " <<tag1+name+"_total_Tkin_"+Ttag  <<endl;
-         tag = tag1+name+"_total_Tkin_"+Ttag ; }
-      
-      TParticle_AZYHYDRO particle(tag);
+
+      cout << " Do particle  " <<tag1+name+"_thermal_Tkin_"+Ttag  <<endl;
+      tag = tag1+name+"_thermal_Tkin_"+Ttag ; 
+      TParticle_AZYHYDRO particle(tag);    
       TKernel kernel(&particle);
-      // if (diff_flag) {
-      //       kernel.print(tag2+name+"_total_Tkin_"+Ttag,"Keq Kshear Kbulk Kdiff" );
-      //     } else {
-            kernel.print(tag2+name+"_total_Tkin_"+Ttag,"Keq Kshear Kbulk Ktemp Kvel" );
-          //}
+      if (diff_flag) {
+        kernel.print(tag2+name+"_thermal_Tkin_"+Ttag,"Keq Kshear Kbulk Kdiff");
+      } else {
+        kernel.print(tag2+name+"_thermal_Tkin_"+Ttag,"Keq Kshear Kbulk Ktemp Kvel");
+      }       
+      }
     }
 
-  }
+  for (int k =0; k<ns; k++){
+    sprintf (buffer, "PDGid_%d", pdg[k]);
+    string name(buffer);
+    string tag;
+      
+    cout << " Do particle  " <<tag1+name+"_total_Tkin_"+Ttag  <<endl;
+    tag = tag1+name+"_total_Tkin_"+Ttag ; 
+    TParticle_AZYHYDRO particle(tag);
+    TKernel kernel(&particle);
+    // if (diff_flag) {
+    //       kernel.print(tag2+name+"_total_Tkin_"+Ttag,"Keq Kshear Kbulk Kdiff" );
+    //     } else {
+        kernel.print(tag2+name+"_total_Tkin_"+Ttag,"Keq Kshear Kbulk Ktemp Kvel" );
+    //}
+    }
 }
+
+
+

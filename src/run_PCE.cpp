@@ -132,7 +132,7 @@ int main(int argc, const char * argv[])
   const double Tmin = j["physics"]["Tkin"][0];
   const double Tmax = j["physics"]["Tkin"][1];
   double dT = j["physics"]["dT"];
-  int NT = (int) ((Tmax - Tmin) / dT) + 1;
+  int NT = round((Tmax - Tmin) / dT) + 1;
 
   bool dothermal = j["physics"]["thermal"];
   
@@ -371,7 +371,7 @@ count_3decays++;
  
   for (int j=0; j<NT; j++)
   {
-    double   T = Tmin-dT*j;
+    double   T = Tmin+dT*j;
     double e=0;
     double s=0;
     double n=0;
@@ -578,10 +578,10 @@ count_3decays++;
   fclose(pFile2);
 
   
-
+  cout << NT << "\n";
   #pragma omp parallel for
   for (int j=0; j<NT; j++){
-    double Tkin = Tmax - dT*j;
+    double Tkin = Tmin + dT*j;
     TFastReso_AZYHYDRO fastreso2;
     std::cout << "Thread " << omp_get_thread_num() << " processing j = " << j << std::endl;
     // read all particles

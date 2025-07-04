@@ -21,7 +21,10 @@ def write_all_T(config, T_type):
 
 def submit_to_slurm(out_path, job, config):
     scriptname = f"slurm_{config['slurm']['name']}.sh"
-    n_jobs = int(len(config['physics']['Tchem']))
+    if config['physics']['do_pce'] == True:
+        n_jobs = int(len(config['physics']['Tchem']))
+    else:
+        n_jobs = int(len(config['physics']['Tkin']))
         
     with open(Path(out_path, scriptname), "w", encoding="utf-8") as fbash:
         fbash.write("#!/bin/bash\n")
@@ -72,13 +75,19 @@ def main() -> int:
     Kj_dir = Path(out_path, "Kj")
 
     
-    #write_all_T(config, 'Tkin')
-    run_Fj = config['run_Fj']
-    decay_list = config['decay_list']
+    
     if config['physics']['do_pce'] == True:
         write_all_T(config, 'Tchem')
         run_Fj = config['run_pce']
         decay_list = f"{config['reversed_decay_list']} {config['decay_list']}"
+        run_Kj = config['run_Kj_pce']
+        
+    else:
+        write_all_T(config, 'Tkin')
+        run_Fj = config['run_Fj']
+        decay_list = config['decay_list']
+        run_Kj = config['run_Kj']
+
 
     with open(Path(out_path, "configuration.json"), "w", encoding="utf-8") as fconf:
         json.dump(config, fconf, indent=4)
@@ -88,7 +97,7 @@ def main() -> int:
     job = (
         f"cp {config_path.absolute()} {out_path.absolute()}/yaml/analysis_$SLURM_JOB_ID.yaml \n"
         f"{run_Fj} {decay_list} {Fj_dir}/ {configuration_path} $SLURM_ARRAY_TASK_ID \n"
-        f"{config['run_Kj']} {Fj_dir}/ {Kj_dir}/ {configuration_path} $SLURM_ARRAY_TASK_ID \n"
+        f"{run_Kj} {Fj_dir}/ {Kj_dir}/ {configuration_path} $SLURM_ARRAY_TASK_ID \n"
     )
     
     submit_to_slurm(out_path, job, config)
